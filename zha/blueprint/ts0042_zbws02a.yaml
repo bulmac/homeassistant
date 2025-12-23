@@ -1,0 +1,79 @@
+blueprint:
+  name: "TS0042 - All Actions (Single, Double, Hold)"
+  description: "Complete control for Tuya 2-button scene switch."
+  domain: automation
+  input:
+    zha_device:
+      name: Select Switch
+      selector:
+        device:
+          integration: zha
+    # Button 1 Actions
+    btn_1_single:
+      name: Button 1 - Single Click
+      default: []
+      selector:
+        action: {}
+    btn_1_double:
+      name: Button 1 - Double Click
+      default: []
+      selector:
+        action: {}
+    btn_1_hold:
+      name: Button 1 - Long Press
+      default: []
+      selector:
+        action: {}
+    # Button 2 Actions
+    btn_2_single:
+      name: Button 2 - Single Click
+      default: []
+      selector:
+        action: {}
+    btn_2_double:
+      name: Button 2 - Double Click
+      default: []
+      selector:
+        action: {}
+    btn_2_hold:
+      name: Button 2 - Long Press
+      default: []
+      selector:
+        action: {}
+
+mode: queued
+
+trigger:
+  - platform: event
+    event_type: zha_event
+    event_data:
+      device_id: !input zha_device
+      command: "press_type"
+
+action:
+  - variables:
+      press_type: "{{ trigger.event.data.params.press_type }}"
+      endpoint: "{{ trigger.event.data.endpoint_id }}"
+  - choose:
+      # BUTTON 1
+      - conditions:
+          - "{{ endpoint == 1 }}"
+        sequence:
+          - choose:
+              - conditions: "{{ press_type == 0 }}"
+                sequence: !input btn_1_single
+              - conditions: "{{ press_type == 1 }}"
+                sequence: !input btn_1_double
+              - conditions: "{{ press_type == 2 }}"
+                sequence: !input btn_1_hold
+      # BUTTON 2
+      - conditions:
+          - "{{ endpoint == 2 }}"
+        sequence:
+          - choose:
+              - conditions: "{{ press_type == 0 }}"
+                sequence: !input btn_2_single
+              - conditions: "{{ press_type == 1 }}"
+                sequence: !input btn_2_double
+              - conditions: "{{ press_type == 2 }}"
+                sequence: !input btn_2_hold
