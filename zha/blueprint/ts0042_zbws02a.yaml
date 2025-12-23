@@ -8,6 +8,7 @@ blueprint:
       selector:
         device:
           integration: zha
+          model: "TS0042"
     # Button 1 Actions
     btn_1_single:
       name: Button 1 - Single Click
@@ -41,7 +42,7 @@ blueprint:
       selector:
         action: {}
 
-mode: queued
+mode: restart
 
 trigger:
   - platform: event
